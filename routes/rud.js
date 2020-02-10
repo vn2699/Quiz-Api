@@ -77,4 +77,15 @@ router.put('/answer/:id',async (req,res)=>{
     res.end();
 })
 
+router.delete('/questions/:id',async(req,res)=>{
+    console.log(req.user);
+    const user = await cat.findOne({_id:req.user})
+        .select({clearance:1});
+    console.log(user);
+    if(user.clearance != 'Admin'){
+        res.status(500).send('Only admins can perform this operation');
+    }
+    const del = await q.findOneAndDelete({id:req.params.id});
+    res.send(del);
+})
 module.exports = router;
